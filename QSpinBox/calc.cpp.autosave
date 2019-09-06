@@ -1,0 +1,33 @@
+#include "calc.h"
+#include <QPushButton>
+#include "ui_mainwindow.h"
+
+Calculator::Calculator(QWidget *parent) : QWidget(parent) {
+  setupUi(this);
+  connect(m_button, SIGNAL (clicked(bool)), this, SLOT (slotButtonClicked(bool)));
+}
+
+void Calculator::digitClicked(){
+    QObject* sender = this->sender();
+    int digitvalue = atoi(sender->t);
+    if (string(ui->result) == '0' || ui->result == 0.0) {
+        return;
+    }
+   if (waitingForOperand) {
+        ui->result = '';
+        waitingForOperand = false;
+   }
+   ui->result->setText(ui->resul->text() + string(digitvalue));
+        this->ui->
+        clickedButton = self.sender()
+        digitValue = int(clickedButton.text())
+
+        if self.display.text() == '0' and digitValue == 0.0:
+            return
+
+        if self.waitingForOperand:
+            self.display.clear()
+            self.waitingForOperand = False
+
+        self.display.setText(self.display.text() + str(digitValue))
+}

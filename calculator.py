@@ -13,61 +13,17 @@ class MyApp(QWidget):
         super().__init__()
         self.initUI()
 
-    def act_btn_0(self):
-        self.string += '0'
+    def act_btn_number(self, number):
+        self.string += number
         self.textbox.setText(self.string)
 
-    def act_btn_1(self):
-        self.string += '1'
+    def act_btn_operator(self, operator):
+        if self.multi_operator is True :
+            self.textbox.setText("operator is aleady set..")
+            return
+        self.string += operator
         self.textbox.setText(self.string)
-
-    def act_btn_2(self):
-        self.string += '2'
-        self.textbox.setText(self.string)
-
-    def act_btn_3(self):
-        self.string += '3'
-        self.textbox.setText(self.string)
-
-    def act_btn_4(self):
-        self.string += '4'
-        self.textbox.setText(self.string)
-
-    def act_btn_5(self):
-        self.string += '5'
-        self.textbox.setText(self.string)
-
-    def act_btn_6(self):
-        self.string += '6'
-        self.textbox.setText(self.string)
-
-    def act_btn_7(self):
-        self.string += '7'
-        self.textbox.setText(self.string)
-
-    def act_btn_8(self):
-        self.string += '8'
-        self.textbox.setText(self.string)
-
-    def act_btn_9(self):
-        self.string += '9'
-        self.textbox.setText(self.string)
-
-    def act_btn_mult(self):
-        self.string += '*'
-        self.textbox.setText(self.string)
-
-    def act_btn_plus(self):
-        self.string += '+'
-        self.textbox.setText(self.string)
-
-    def act_btn_minus(self):
-        self.string += '-'
-        self.textbox.setText(self.string)
-
-    def act_btn_divide(self):
-        self.string += '/'
-        self.textbox.setText(self.string)
+        self.multi_operator = True
     
     def act_btn_equal(self):
         if self.string is '':
@@ -90,6 +46,7 @@ class MyApp(QWidget):
         grid = QGridLayout()
         self.setLayout(grid)
         self.string = ''
+        self.multi_operator = False
         self.textbox = QLineEdit(self)
         self.textbox.setReadOnly(True)
         self.textbox.setText(str(0))
@@ -98,26 +55,39 @@ class MyApp(QWidget):
 
         btn_0 = Button('0')
         grid.addWidget(btn_0, 5, 0, 1, 2)
-        for i in range(1, 10):
+        btn_0.clicked.connect(lambda: self.act_btn_number('0'))  
+
+        #map(self.act_btn_number, [str(i) for i in range(1, 10)])
+        '''
+        lambdas = [lambda: self.act_btn_number(str(i)) for i in range(1, 10)]
+        
+        for (i, f) in zip(range(1, 10), lambdas):
             setattr(self, 'btn_%s' % (i), Button(str(i)))
             grid.addWidget(getattr(self, 'btn_%s' % (i)), 5 - (i / 3), (i  - 1) % 3)
-            getattr(self, 'btn_%s' % (i)).clicked.connect(getattr(self, 'act_btn_%s' % (i)))  
-
+            getattr(self, 'btn_%s' % (i)).clicked.connect(f)  
+        '''
+        
+        for i in range(1, 10):
+            print(str(i))
+            setattr(self, 'btn_%s' % (i), Button(str(i)))
+            grid.addWidget(getattr(self, 'btn_%s' % (i)), 5 - (i / 3), (i  - 1) % 3)
+            getattr(self, 'btn_%s' % (i)).clicked.connect(lambda: self.act_btn_number(str(i)))
+        
         btn_plus = Button('+')
         grid.addWidget(btn_plus, 1, 0)
-        btn_plus.clicked.connect(self.act_btn_plus)
+        btn_plus.clicked.connect(lambda: self.act_btn_operator('+'))
 
         btn_minus = Button('-')
         grid.addWidget(btn_minus, 1, 1)
-        btn_minus.clicked.connect(self.act_btn_minus)
+        btn_minus.clicked.connect(lambda: self.act_btn_operator('-'))
 
         btn_mult = Button('*')
         grid.addWidget(btn_mult, 1, 2)
-        btn_mult.clicked.connect(self.act_btn_mult)
+        btn_mult.clicked.connect(lambda: self.act_btn_operator('*'))
 
         btn_divide = Button('/')
         grid.addWidget(btn_divide, 1, 3)
-        btn_divide.clicked.connect(self.act_btn_divide)
+        btn_divide.clicked.connect(lambda: self.act_btn_operator('/'))
 
         btn_equal = Button('=')
         grid.addWidget(btn_equal, 4, 3, 2, 1)
